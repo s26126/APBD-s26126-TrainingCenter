@@ -1,8 +1,11 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace APBD_s26126_TrainingCenter.Models;
 
 public class Room
 {
     public int Id { get; set; }
+    [Required]
     public string Name { get; set; } = null!;
     public string BuildingCode { get; set; } = null!;
     public int Floor { get; set; }

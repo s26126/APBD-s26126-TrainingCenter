@@ -80,5 +80,24 @@ namespace APBD_s26126_TrainingCenter.Controllers
             return CreatedAtAction(nameof(GetById), new { id = room.Id }, room);
         }
 
+        // DELETE api/rooms/{id}
+        [HttpDelete("{id:int}")]
+        public IActionResult Delete([FromRoute] int id)
+        {
+            var room = Data.Data.Rooms.FirstOrDefault(r => r.Id == id);
+
+            if (room == null)
+                return NotFound();
+
+            var hasReservations = Data.Data.Reservations.Any(r => r.RoomId == id);
+
+            if (hasReservations)
+                return Conflict("Sala ma przypisane rezerwacje i nie moze zostac usunieta.");
+
+            Data.Data.Rooms.Remove(room);
+
+            return NoContent();
+        }
+
     }
 }

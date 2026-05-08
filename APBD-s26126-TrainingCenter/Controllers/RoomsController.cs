@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using APBD_s26126_TrainingCenter.Data;
+using APBD_s26126_TrainingCenter.Models;
 
 namespace APBD_s26126_TrainingCenter.Controllers
 {
@@ -47,6 +48,36 @@ namespace APBD_s26126_TrainingCenter.Controllers
                 return NotFound();
 
             return Ok(room);
+        }
+
+        // PUT api/rooms/{id}
+        [HttpPut("{id:int}")]
+        public IActionResult Update([FromRoute] int id, [FromBody] Room room)
+        {
+            var existing = Data.Data.Rooms.FirstOrDefault(r => r.Id == id);
+
+            if (existing == null)
+                return NotFound();
+
+            existing.Name = room.Name;
+            existing.BuildingCode = room.BuildingCode;
+            existing.Floor = room.Floor;
+            existing.Capacity = room.Capacity;
+            existing.HasProjector = room.HasProjector;
+            existing.IsActive = room.IsActive;
+
+            return Ok(existing);
+        }
+
+        // POST api/rooms
+        [HttpPost]
+        public IActionResult Create([FromBody] Room room)
+        {
+            room.Id = Data.Data.Rooms.Count > 0 ? Data.Data.Rooms.Max(r => r.Id) + 1 : 1;
+
+            Data.Data.Rooms.Add(room);
+
+            return CreatedAtAction(nameof(GetById), new { id = room.Id }, room);
         }
 
     }

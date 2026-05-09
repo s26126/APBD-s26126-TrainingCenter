@@ -72,5 +72,39 @@ namespace APBD_s26126_TrainingCenter.Controllers
             return CreatedAtAction(nameof(GetById),new { id = reservation.Id }, reservation);
         }
 
+        // PUT api/reservations/{id}
+        [HttpPut("{id:int}")]
+        public IActionResult Update([FromRoute] int id, [FromBody] Reservation reservation)
+        {
+            var existing = Data.Data.Reservations.FirstOrDefault(r => r.Id == id);
+
+            if (existing == null)
+                return NotFound();
+
+            existing.RoomId = reservation.RoomId;
+            existing.OrganizerName = reservation.OrganizerName;
+            existing.Topic = reservation.Topic;
+            existing.Date = reservation.Date;
+            existing.StartTime = reservation.StartTime;
+            existing.EndTime = reservation.EndTime;
+            existing.Status = reservation.Status;
+
+            return Ok(existing);
+        }
+
+        // DELETE api/reservations/{id}
+        [HttpDelete("{id:int}")]
+        public IActionResult Delete([FromRoute] int id)
+        {
+          var reservation = Data.Data.Reservations.FirstOrDefault(r => r.Id == id);
+
+            if (reservation == null)
+                return NotFound();
+
+            Data.Data.Reservations.Remove(reservation);
+
+            return NoContent();
+        }
+
     }
 }
